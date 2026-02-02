@@ -1,0 +1,21 @@
+{
+  "name": "hutta-home-services",
+  "version": "1.0.0",
+  "description": "Professional home services management platform",
+  "main": "backend/server.js",
+  "scripts": {
+    "start": "node backend/server.js",
+    "dev": "node backend/server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "mongoose": "^7.5.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "jsonwebtoken": "^9.0.2",
+    "bcryptjs": "^2.4.3"
+  },
+  "engines": {
+    "node": "18.x"
+  }
+}

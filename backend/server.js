@@ -10,26 +10,9 @@ const app = express();
 app.use(cors());
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ limit: '10mb', extended: true }));
-app.use(express.static('../'));
+app.use(express.static(path.join(__dirname, '..')));
 
-// Serve frontend pages
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, '../index.html'));
-});
-
-app.get('/login.html', (req, res) => {
-  res.sendFile(path.join(__dirname, '../pages/login.html'));
-});
-
-app.get('/admin-dashboard.html', (req, res) => {
-  res.sendFile(path.join(__dirname, '../pages/admin-dashboard.html'));
-});
-
-app.get('/pages/:page', (req, res) => {
-  res.sendFile(path.join(__dirname, `../pages/${req.params.page}`));
-});
-
-// Routes
+// API Routes
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/orders', require('./routes/orders'));
 app.use('/api/customers', require('./routes/customers'));
@@ -46,7 +29,16 @@ mongoose.connect(process.env.MONGODB_URI)
   .then(() => console.log('Connected to MongoDB Atlas'))
   .catch(err => console.error('MongoDB connection error:', err));
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+// Serve static files
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, '../index.html'));
 });
+
+module.exports = app;
+
+if (require.main === module) {
+  const PORT = process.env.PORT || 3000;
+  app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+  });
+}
