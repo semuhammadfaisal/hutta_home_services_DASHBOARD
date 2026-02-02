@@ -1,0 +1,333 @@
+// API Service for Hutta Home Services
+class APIService {
+    constructor() {
+        this.baseURL = 'http://localhost:3000/api';
+        this.token = this.getToken();
+    }
+
+    getToken() {
+        const session = localStorage.getItem('huttaSession') || sessionStorage.getItem('huttaSession');
+        if (session) {
+            try {
+                const sessionData = JSON.parse(session);
+                return sessionData.token;
+            } catch (error) {
+                console.error('Error parsing session:', error);
+                return null;
+            }
+        }
+        return null;
+    }
+
+    async request(endpoint, options = {}) {
+        const url = `${this.baseURL}${endpoint}`;
+        
+        // Get fresh token for each request
+        const token = this.getToken();
+        
+        const config = {
+            headers: {
+                'Content-Type': 'application/json',
+                ...options.headers
+            },
+            ...options
+        };
+
+        if (token) {
+            config.headers.Authorization = `Bearer ${token}`;
+        }
+
+        console.log('Making request to:', url, 'with config:', config);
+
+        try {
+            const response = await fetch(url, config);
+            
+            console.log('Response status:', response.status);
+            console.log('Response headers:', response.headers);
+            
+            const data = await response.json();
+            
+            if (!response.ok) {
+                throw new Error(data.message || 'API request failed');
+            }
+            
+            return data;
+        } catch (error) {
+            console.error('API Error:', error);
+            throw error;
+        }
+    }
+
+    // Authentication
+    async login(email, password) {
+        const response = await this.request('/auth/login', {
+            method: 'POST',
+            body: JSON.stringify({ email, password })
+        });
+        
+        if (response.token) {
+            this.token = response.token;
+            const sessionData = {
+                token: response.token,
+                user: response.user,
+                loginTime: new Date().toISOString(),
+                isAuthenticated: true
+            };
+            
+            localStorage.setItem('huttaSession', JSON.stringify(sessionData));
+        }
+        
+        return response;
+    }
+
+    async getOrder(id) {
+        return this.request(`/orders/${id}`);
+    }
+
+    async deleteOrder(id) {
+        return this.request(`/orders/${id}`, {
+            method: 'DELETE'
+        });
+    }
+
+    // Update profile
+    async updateProfile(profileData) {
+        return this.request('/auth/profile', {
+            method: 'PUT',
+            body: JSON.stringify(profileData)
+        });
+    }
+
+    // Orders
+    async getOrders() {
+        return this.request('/orders');
+    }
+
+    async createOrder(orderData) {
+        return this.request('/orders', {
+            method: 'POST',
+            body: JSON.stringify(orderData)
+        });
+    }
+
+    async updateOrder(id, orderData) {
+        return this.request(`/orders/${id}`, {
+            method: 'PUT',
+            body: JSON.stringify(orderData)
+        });
+    }
+
+    async getOrderStats() {
+        return this.request('/orders/stats');
+    }
+
+    // Customers
+    async getCustomers() {
+        return this.request('/customers');
+    }
+
+    async getCustomer(id) {
+        return this.request(`/customers/${id}`);
+    }
+
+    async createCustomer(customerData) {
+        return this.request('/customers', {
+            method: 'POST',
+            body: JSON.stringify(customerData)
+        });
+    }
+
+    async updateCustomer(id, customerData) {
+        return this.request(`/customers/${id}`, {
+            method: 'PUT',
+            body: JSON.stringify(customerData)
+        });
+    }
+
+    async deleteCustomer(id) {
+        return this.request(`/customers/${id}`, {
+            method: 'DELETE'
+        });
+    }
+
+    // Vendors
+    async getVendors() {
+        return this.request('/vendors');
+    }
+
+    async getVendor(id) {
+        return this.request(`/vendors/${id}`);
+    }
+
+    async createVendor(vendorData) {
+        return this.request('/vendors', {
+            method: 'POST',
+            body: JSON.stringify(vendorData)
+        });
+    }
+
+    async updateVendor(id, vendorData) {
+        return this.request(`/vendors/${id}`, {
+            method: 'PUT',
+            body: JSON.stringify(vendorData)
+        });
+    }
+
+    async deleteVendor(id) {
+        return this.request(`/vendors/${id}`, {
+            method: 'DELETE'
+        });
+    }
+
+    // Projects
+    async getProjects() {
+        return this.request('/projects');
+    }
+
+    async getProject(id) {
+        return this.request(`/projects/${id}`);
+    }
+
+    async createProject(projectData) {
+        return this.request('/projects', {
+            method: 'POST',
+            body: JSON.stringify(projectData)
+        });
+    }
+
+    async updateProject(id, projectData) {
+        return this.request(`/projects/${id}`, {
+            method: 'PUT',
+            body: JSON.stringify(projectData)
+        });
+    }
+
+    async deleteProject(id) {
+        return this.request(`/projects/${id}`, {
+            method: 'DELETE'
+        });
+    }
+
+    // Payments
+    async getPayments() {
+        return this.request('/payments');
+    }
+
+    async getPayment(id) {
+        return this.request(`/payments/${id}`);
+    }
+
+    async createPayment(paymentData) {
+        return this.request('/payments', {
+            method: 'POST',
+            body: JSON.stringify(paymentData)
+        });
+    }
+
+    async updatePayment(id, paymentData) {
+        return this.request(`/payments/${id}`, {
+            method: 'PUT',
+            body: JSON.stringify(paymentData)
+        });
+    }
+
+    async deletePayment(id) {
+        return this.request(`/payments/${id}`, {
+            method: 'DELETE'
+        });
+    }
+
+    // Reports
+    async getFinancialReport(startDate, endDate) {
+        const params = new URLSearchParams();
+        if (startDate) params.append('startDate', startDate);
+        if (endDate) params.append('endDate', endDate);
+        return this.request(`/reports/financial?${params}`);
+    }
+
+    async getOrdersReport(startDate, endDate) {
+        const params = new URLSearchParams();
+        if (startDate) params.append('startDate', startDate);
+        if (endDate) params.append('endDate', endDate);
+        return this.request(`/reports/orders?${params}`);
+    }
+
+    async getCustomersReport() {
+        return this.request('/reports/customers');
+    }
+
+    async getProjectsReport() {
+        return this.request('/reports/projects');
+    }
+
+    // Settings
+    async getSettings() {
+        return this.request('/settings');
+    }
+
+    async updateSettings(settingsData) {
+        return this.request('/settings', {
+            method: 'PUT',
+            body: JSON.stringify(settingsData)
+        });
+    }
+
+    async resetSettings() {
+        return this.request('/settings/reset', {
+            method: 'POST'
+        });
+    }
+
+    // Notifications
+    async getNotifications() {
+        return this.request('/notifications');
+    }
+
+    async getUnreadCount() {
+        return this.request('/notifications/unread-count');
+    }
+
+    async markAsRead(notificationId) {
+        return this.request(`/notifications/${notificationId}/read`, {
+            method: 'PUT'
+        });
+    }
+
+    async markAllAsRead() {
+        return this.request('/notifications/mark-all-read', {
+            method: 'PUT'
+        });
+    }
+
+    // Employees
+    async getEmployees() {
+        return this.request('/employees');
+    }
+
+    async getEmployee(id) {
+        return this.request(`/employees/${id}`);
+    }
+
+    async createEmployee(employeeData) {
+        return this.request('/employees', {
+            method: 'POST',
+            body: JSON.stringify(employeeData)
+        });
+    }
+
+    async updateEmployee(id, employeeData) {
+        return this.request(`/employees/${id}`, {
+            method: 'PUT',
+            body: JSON.stringify(employeeData)
+        });
+    }
+
+    async deleteEmployee(id) {
+        return this.request(`/employees/${id}`, {
+            method: 'DELETE'
+        });
+    }
+}
+
+// Create global instance
+window.APIService = new APIService();
