@@ -3,6 +3,7 @@ class APIService {
     constructor() {
         this.baseURL = 'http://localhost:3000/api';
         this.token = this.getToken();
+        this.demoMode = true; // Enable demo mode for static deployment
     }
 
     getToken() {
@@ -20,9 +21,12 @@ class APIService {
     }
 
     async request(endpoint, options = {}) {
-        const url = `${this.baseURL}${endpoint}`;
+        // Demo mode - return mock data
+        if (this.demoMode) {
+            return this.getMockResponse(endpoint, options);
+        }
         
-        // Get fresh token for each request
+        const url = `${this.baseURL}${endpoint}`;
         const token = this.getToken();
         
         const config = {
@@ -37,14 +41,8 @@ class APIService {
             config.headers.Authorization = `Bearer ${token}`;
         }
 
-        console.log('Making request to:', url, 'with config:', config);
-
         try {
             const response = await fetch(url, config);
-            
-            console.log('Response status:', response.status);
-            console.log('Response headers:', response.headers);
-            
             const data = await response.json();
             
             if (!response.ok) {
@@ -56,6 +54,21 @@ class APIService {
             console.error('API Error:', error);
             throw error;
         }
+    }
+
+    getMockResponse(endpoint, options) {
+        return new Promise((resolve) => {
+            setTimeout(() => {
+                if (endpoint === '/auth/login') {
+                    resolve({
+                        token: 'demo-token-' + Date.now(),
+                        user: { email: 'admin@hutta.com', name: 'Admin User' }
+                    });
+                } else {
+                    resolve({ success: true, data: [] });
+                }
+            }, 500);
+        });
     }
 
     // Authentication
