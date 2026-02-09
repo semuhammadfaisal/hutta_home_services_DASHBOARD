@@ -9,6 +9,28 @@ router.post('/login', async (req, res) => {
   try {
     const { email, password } = req.body;
     
+    // For demo: accept any credentials if no users exist
+    const userCount = await User.countDocuments();
+    if (userCount === 0) {
+      // No users in DB, create demo response
+      const token = jwt.sign(
+        { userId: 'demo-user', email: email, role: 'admin' },
+        process.env.JWT_SECRET,
+        { expiresIn: '24h' }
+      );
+      
+      return res.json({
+        token,
+        user: {
+          id: 'demo-user',
+          email: email,
+          firstName: 'Admin',
+          lastName: 'User',
+          role: 'admin'
+        }
+      });
+    }
+    
     const user = await User.findOne({ email, isActive: true });
     if (!user || !(await user.comparePassword(password))) {
       return res.status(401).json({ message: 'Invalid credentials' });
@@ -31,6 +53,7 @@ router.post('/login', async (req, res) => {
       }
     });
   } catch (error) {
+    console.error('Login error:', error);
     res.status(500).json({ message: 'Server error' });
   }
 });
