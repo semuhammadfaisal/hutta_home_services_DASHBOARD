@@ -76,7 +76,7 @@ class LoginManager {
         // Show success and redirect
         this.showSuccess();
         setTimeout(() => {
-            window.location.href = 'admin-dashboard.html';
+            window.location.href = '/pages/admin-dashboard.html';
         }, 1000);
     }
 
