@@ -99,6 +99,10 @@
     </div>
     
     <script>
+        // CRITICAL: Override any cached redirect paths
+        window.DASHBOARD_URL = '/pages/admin-dashboard.html';
+        window.LOGIN_URL = '/pages/login.html';
+        
         // Force cache refresh with timestamp
         const timestamp = new Date().getTime();
         const script1 = document.createElement('script');

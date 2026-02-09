@@ -44,7 +44,7 @@ class LoginManager {
             // Show success and redirect
             this.showSuccess();
             setTimeout(() => {
-                window.location.href = '/pages/admin-dashboard.html';
+                window.location.href = window.DASHBOARD_URL || '/pages/admin-dashboard.html';
             }, 1000);
         } catch (error) {
             this.showError(error.message || 'Login failed. Please try again.');
