@@ -1,10 +1,13 @@
 // API Service for Hutta Home Services
 class APIService {
     constructor() {
-        this.baseURL = 'http://localhost:3000/api';
+        this.baseURL = window.location.hostname === 'localhost' 
+            ? 'http://localhost:3000/api'
+            : 'https://hutta-home-services-dashboard.onrender.com/api';
         this.token = this.getToken();
-        this.demoMode = true; // Enable demo mode for static deployment
+        this.demoMode = false; // Disable demo mode - using real backend
         console.log('APIService initialized - Demo Mode:', this.demoMode);
+        console.log('API Base URL:', this.baseURL);
     }
 
     getToken() {
