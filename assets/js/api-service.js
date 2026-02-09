@@ -4,6 +4,7 @@ class APIService {
         this.baseURL = 'http://localhost:3000/api';
         this.token = this.getToken();
         this.demoMode = true; // Enable demo mode for static deployment
+        console.log('APIService initialized - Demo Mode:', this.demoMode);
     }
 
     getToken() {
@@ -23,8 +24,11 @@ class APIService {
     async request(endpoint, options = {}) {
         // Demo mode - return mock data
         if (this.demoMode) {
+            console.log('Using demo mode for:', endpoint);
             return this.getMockResponse(endpoint, options);
         }
+        
+        console.log('Making request to:', `${this.baseURL}${endpoint}`);
         
         const url = `${this.baseURL}${endpoint}`;
         const token = this.getToken();
