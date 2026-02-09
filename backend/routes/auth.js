@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 const User = require('../models/User');
 const authenticateToken = require('../middleware/auth');
+const { sendPasswordResetEmail } = require('../utils/emailService');
 const router = express.Router();
 
 // Login
@@ -121,10 +122,9 @@ router.post('/forgot-password', async (req, res) => {
     user.resetPasswordExpiry = resetTokenExpiry;
     await user.save();
     
-    // In production, send email here
-    console.log(`Reset link: ${process.env.FRONTEND_URL || 'http://localhost'}/pages/reset-password.html?token=${resetToken}`);
+    await sendPasswordResetEmail(email, resetToken);
     
-    res.json({ message: 'If email exists, reset link sent', token: resetToken });
+    res.json({ message: 'If email exists, reset link sent' });
   } catch (error) {
     console.error('Forgot password error:', error);
     res.status(500).json({ message: 'Server error' });
