@@ -1,5 +1,6 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
+const crypto = require('crypto');
 const User = require('../models/User');
 const authenticateToken = require('../middleware/auth');
 const router = express.Router();
@@ -99,6 +100,60 @@ router.put('/profile', authenticateToken, async (req, res) => {
     
     res.json({ message: 'Profile updated successfully', user });
   } catch (error) {
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// Forgot password
+router.post('/forgot-password', async (req, res) => {
+  try {
+    const { email } = req.body;
+    const user = await User.findOne({ email, isActive: true });
+    
+    if (!user) {
+      return res.json({ message: 'If email exists, reset link sent' });
+    }
+    
+    const resetToken = crypto.randomBytes(32).toString('hex');
+    const resetTokenExpiry = Date.now() + 3600000; // 1 hour
+    
+    user.resetPasswordToken = resetToken;
+    user.resetPasswordExpiry = resetTokenExpiry;
+    await user.save();
+    
+    // In production, send email here
+    console.log(`Reset link: ${process.env.FRONTEND_URL || 'http://localhost'}/pages/reset-password.html?token=${resetToken}`);
+    
+    res.json({ message: 'If email exists, reset link sent', token: resetToken });
+  } catch (error) {
+    console.error('Forgot password error:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// Reset password
+router.post('/reset-password', async (req, res) => {
+  try {
+    const { token, password } = req.body;
+    
+    const user = await User.findOne({
+      resetPasswordToken: token,
+      resetPasswordExpiry: { $gt: Date.now() },
+      isActive: true
+    });
+    
+    if (!user) {
+      return res.status(400).json({ message: 'Invalid or expired reset token' });
+    }
+    
+    user.password = password;
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpiry = undefined;
+    await user.save();
+    
+    res.json({ message: 'Password reset successfully' });
+  } catch (error) {
+    console.error('Reset password error:', error);
     res.status(500).json({ message: 'Server error' });
   }
 });

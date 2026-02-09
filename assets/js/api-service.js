@@ -82,6 +82,20 @@ class APIService {
     }
 
     // Authentication
+    async forgotPassword(email) {
+        return this.request('/auth/forgot-password', {
+            method: 'POST',
+            body: JSON.stringify({ email })
+        });
+    }
+
+    async resetPassword(token, password) {
+        return this.request('/auth/reset-password', {
+            method: 'POST',
+            body: JSON.stringify({ token, password })
+        });
+    }
+
     async login(email, password) {
         const response = await this.request('/auth/login', {
             method: 'POST',
