@@ -61,14 +61,17 @@ class APIService {
     }
 
     getMockResponse(endpoint, options) {
+        console.log('getMockResponse called for:', endpoint);
         return new Promise((resolve) => {
             setTimeout(() => {
                 if (endpoint === '/auth/login') {
+                    console.log('Returning mock login response');
                     resolve({
                         token: 'demo-token-' + Date.now(),
                         user: { email: 'admin@hutta.com', name: 'Admin User' }
                     });
                 } else {
+                    console.log('Returning generic mock response');
                     resolve({ success: true, data: [] });
                 }
             }, 500);
