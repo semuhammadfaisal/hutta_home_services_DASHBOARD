@@ -44,7 +44,7 @@ class LoginManager {
             // Show success and redirect
             this.showSuccess();
             setTimeout(() => {
-                window.location.href = '/admin-dashboard.html';
+                window.location.href = 'admin-dashboard.html';
             }, 1000);
         } catch (error) {
             this.showError(error.message || 'Login failed. Please try again.');
@@ -89,7 +89,7 @@ class LoginManager {
                 const sessionData = JSON.parse(session);
                 if (sessionData.isAuthenticated) {
                     // Redirect to dashboard if already logged in
-                    window.location.href = '/admin-dashboard.html';
+                    window.location.href = 'admin-dashboard.html';
                 }
             } catch (error) {
                 // Clear invalid session data
@@ -153,14 +153,14 @@ class SessionManager {
                        sessionStorage.getItem('huttaSession');
         
         if (!session) {
-            window.location.href = '/login.html';
+            window.location.href = 'login.html';
             return false;
         }
         
         try {
             const sessionData = JSON.parse(session);
             if (!sessionData.isAuthenticated) {
-                window.location.href = '/login.html';
+                window.location.href = 'login.html';
                 return false;
             }
             return sessionData;
@@ -173,7 +173,7 @@ class SessionManager {
     static logout() {
         localStorage.removeItem('huttaSession');
         sessionStorage.removeItem('huttaSession');
-        window.location.href = '/login.html';
+        window.location.href = 'login.html';
     }
 
     static getUserInfo() {
