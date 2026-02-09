@@ -98,7 +98,18 @@
         </div>
     </div>
     
-    <script src="../assets/js/api-service.js?v=3"></script>
-    <script src="../assets/js/login-script.js?v=3"></script>
+    <script>
+        // Force cache refresh with timestamp
+        const timestamp = new Date().getTime();
+        const script1 = document.createElement('script');
+        script1.src = `../assets/js/api-service.js?v=${timestamp}`;
+        document.head.appendChild(script1);
+        
+        script1.onload = function() {
+            const script2 = document.createElement('script');
+            script2.src = `../assets/js/login-script.js?v=${timestamp}`;
+            document.head.appendChild(script2);
+        };
+    </script>
 </body>
 </html>
