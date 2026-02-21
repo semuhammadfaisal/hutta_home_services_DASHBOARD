@@ -88,6 +88,56 @@ router.post('/register', async (req, res) => {
   }
 });
 
+// Signup (public user registration)
+router.post('/signup', async (req, res) => {
+  try {
+    console.log('Signup request received:', req.body);
+    const { name, email, password } = req.body;
+    
+    if (!name || !email || !password) {
+      return res.status(400).json({ message: 'All fields are required' });
+    }
+
+    if (password.length < 8) {
+      return res.status(400).json({ message: 'Password must be at least 8 characters' });
+    }
+    
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(400).json({ message: 'Email already registered' });
+    }
+
+    const [firstName, ...lastNameParts] = name.split(' ');
+    const lastName = lastNameParts.join(' ') || firstName;
+
+    console.log('Creating user:', { email, firstName, lastName, role: 'supervisor' });
+
+    const user = new User({ 
+      email, 
+      password, 
+      firstName, 
+      lastName,
+      role: 'supervisor'
+    });
+    await user.save();
+
+    console.log('User created successfully:', user._id);
+
+    res.status(201).json({ 
+      message: 'Account created successfully',
+      user: {
+        id: user._id,
+        email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName
+      }
+    });
+  } catch (error) {
+    console.error('Signup error details:', error);
+    res.status(500).json({ message: error.message || 'Server error' });
+  }
+});
+
 // Update profile
 router.put('/profile', authenticateToken, async (req, res) => {
   try {

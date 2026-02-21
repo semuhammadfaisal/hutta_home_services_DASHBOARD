@@ -35,6 +35,9 @@ app.use('/api/payments', require('./routes/payments'));
 app.use('/api/reports', require('./routes/reports'));
 app.use('/api/settings', require('./routes/settings'));
 app.use('/api/notifications', require('./routes/notifications'));
+app.use('/api/stages', require('./routes/stages'));
+app.use('/api/pipeline-records', require('./routes/pipelineRecords'));
+app.use('/api/pipeline-movements', require('./routes/pipelineMovements'));
 
 // MongoDB Connection
 mongoose.connect(process.env.MONGODB_URI)

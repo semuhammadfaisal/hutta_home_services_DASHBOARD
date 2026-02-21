@@ -472,7 +472,23 @@ body {
     75% { transform: translateX(5px); }
 }
 
+.signup-link {
+    text-align: center;
+    margin-top: 16px;
+    font-size: 14px;
+    color: var(--medium-gray);
+}
 
+.signup-link a {
+    color: var(--primary-blue);
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.2s;
+}
+
+.signup-link a:hover {
+    color: #1d4ed8;
+}
 
 /* Responsive Design */
 @media (max-width: 768px) {

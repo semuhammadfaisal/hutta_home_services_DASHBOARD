@@ -1,0 +1,294 @@
+/* Pipeline Management Styles */
+
+.pipeline-container {
+    padding: 20px;
+    background: #f5f7fa;
+    border-radius: 8px;
+}
+
+.pipeline-stages {
+    display: flex;
+    gap: 20px;
+    overflow-x: auto;
+    padding: 10px;
+    min-height: 500px;
+}
+
+.pipeline-stage {
+    background: #fff;
+    border-radius: 8px;
+    min-width: 300px;
+    max-width: 300px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+    transition: all 0.3s;
+}
+
+.pipeline-stage.dragging-over {
+    background: #e3f2fd;
+    border: 2px dashed #2196F3;
+}
+
+.stage-header {
+    padding: 15px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-radius: 8px 8px 0 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.stage-header.active {
+    background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+}
+
+.stage-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 1;
+}
+
+.stage-title h3 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.stage-count {
+    background: rgba(255,255,255,0.3);
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.stage-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.stage-action-btn {
+    background: rgba(255,255,255,0.2);
+    border: none;
+    color: white;
+    width: 28px;
+    height: 28px;
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+}
+
+.stage-action-btn:hover {
+    background: rgba(255,255,255,0.3);
+}
+
+.stage-body {
+    padding: 15px;
+    flex: 1;
+    overflow-y: auto;
+    max-height: 600px;
+}
+
+.stage-projects {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    min-height: 50px;
+}
+
+.project-card {
+    background: #f8f9fa;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    padding: 12px;
+    cursor: move;
+    transition: all 0.2s;
+}
+
+.project-card:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    transform: translateY(-2px);
+}
+
+.project-card.dragging {
+    opacity: 0.5;
+}
+
+.project-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+    margin-bottom: 8px;
+}
+
+.project-name {
+    font-weight: 600;
+    font-size: 14px;
+    color: #333;
+}
+
+.project-id {
+    font-size: 11px;
+    color: #999;
+    background: #e0e0e0;
+    padding: 2px 6px;
+    border-radius: 3px;
+}
+
+.project-customer {
+    font-size: 12px;
+    color: #666;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.project-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 11px;
+    color: #999;
+}
+
+.project-priority {
+    padding: 2px 8px;
+    border-radius: 3px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.project-priority.high {
+    background: #ffebee;
+    color: #c62828;
+}
+
+.project-priority.medium {
+    background: #fff3e0;
+    color: #ef6c00;
+}
+
+.project-priority.low {
+    background: #e8f5e9;
+    color: #2e7d32;
+}
+
+.stage-footer {
+    padding: 10px 15px;
+    border-top: 1px solid #e0e0e0;
+    background: #fafafa;
+    border-radius: 0 0 8px 8px;
+}
+
+.drag-handle {
+    cursor: grab;
+    color: #999;
+    margin-right: 5px;
+}
+
+.drag-handle:active {
+    cursor: grabbing;
+}
+
+/* Stage Modal */
+.stage-modal {
+    max-width: 500px;
+}
+
+.delete-modal {
+    max-width: 450px;
+}
+
+.modal-overlay.show {
+    display: flex;
+}
+
+.btn-danger {
+    background: #f44336;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.2s;
+}
+
+.btn-danger:hover {
+    background: #d32f2f;
+}
+
+#reassignSection {
+    margin-top: 15px;
+    padding: 15px;
+    background: #fff3cd;
+    border-radius: 4px;
+}
+
+#reassignSection label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #856404;
+}
+
+#reassignStage {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ffc107;
+    border-radius: 4px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .pipeline-stages {
+        flex-direction: column;
+    }
+    
+    .pipeline-stage {
+        min-width: 100%;
+        max-width: 100%;
+    }
+}
+
+/* Scrollbar */
+.stage-body::-webkit-scrollbar {
+    width: 6px;
+}
+
+.stage-body::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+.stage-body::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 3px;
+}
+
+.stage-body::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+.pipeline-stages::-webkit-scrollbar {
+    height: 8px;
+}
+
+.pipeline-stages::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+.pipeline-stages::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+}
+
+.pipeline-stages::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}

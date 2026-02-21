@@ -2,7 +2,7 @@
 class APIService {
     constructor() {
         this.baseURL = window.location.hostname === 'localhost' 
-            ? 'http://localhost:3000/api'
+            ? 'http://localhost:10000/api'
             : 'https://hutta-home-services-dashboard.onrender.com/api';
         this.token = this.getToken();
         this.demoMode = false; // Disable demo mode - using real backend
@@ -82,6 +82,13 @@ class APIService {
     }
 
     // Authentication
+    async signup(userData) {
+        return this.request('/auth/signup', {
+            method: 'POST',
+            body: JSON.stringify(userData)
+        });
+    }
+
     async forgotPassword(email) {
         return this.request('/auth/forgot-password', {
             method: 'POST',

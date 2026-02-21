@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Hutta Home Services</title>
+    <title>Sign Up - Hutta Home Services</title>
     <link rel="stylesheet" href="../assets/css/login-styles.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
@@ -23,7 +23,7 @@
                         </div>
                         <h2>Hutta Home Services</h2>
                     </div>
-                    <p>Transform your home with our professional services. Trusted by 10,000+ customers nationwide.</p>
+                    <p>Join thousands of satisfied customers and transform your home with our professional services.</p>
                     <div class="stats">
                         <div class="stat">
                             <h3>10K+</h3>
@@ -46,14 +46,22 @@
             <div class="login-container">
                 <div class="login-header">
                     <div class="welcome-badge">
-                        <i class="fas fa-shield-alt"></i>
-                        <span>Secure Login</span>
+                        <i class="fas fa-user-plus"></i>
+                        <span>Create Account</span>
                     </div>
-                    <h1>Welcome Back</h1>
-                    <p>Enter your credentials to access your dashboard</p>
+                    <h1>Get Started</h1>
+                    <p>Create your account to access our services</p>
                 </div>
             
-            <form class="login-form" id="loginForm">
+            <form class="login-form" id="signupForm">
+                <div class="form-group">
+                    <label for="fullName">Full Name</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-user"></i>
+                        <input type="text" id="fullName" name="fullName" placeholder="Enter your full name" required>
+                    </div>
+                </div>
+
                 <div class="form-group">
                     <label for="email">Email Address</label>
                     <div class="input-wrapper">
@@ -66,8 +74,19 @@
                     <label for="password">Password</label>
                     <div class="input-wrapper">
                         <i class="fas fa-lock"></i>
-                        <input type="password" id="password" name="password" placeholder="Enter your password" required>
+                        <input type="password" id="password" name="password" placeholder="Create a password" required>
                         <button type="button" class="toggle-password" id="togglePassword">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="confirmPassword">Confirm Password</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm your password" required>
+                        <button type="button" class="toggle-password" id="toggleConfirmPassword">
                             <i class="fas fa-eye"></i>
                         </button>
                     </div>
@@ -75,15 +94,14 @@
                 
                 <div class="form-options">
                     <label class="checkbox-wrapper">
-                        <input type="checkbox" id="rememberMe">
+                        <input type="checkbox" id="agreeTerms" name="agreeTerms" required>
                         <span class="checkmark"></span>
-                        Remember me
+                        I agree to the <a href="#" class="forgot-password">Terms & Conditions</a>
                     </label>
-                    <a href="forgot-password.html" class="forgot-password">Forgot Password?</a>
                 </div>
                 
-                <button type="submit" class="login-btn" id="loginBtn">
-                    <span class="btn-text">Sign In</span>
+                <button type="submit" class="login-btn" id="signupBtn">
+                    <span class="btn-text">Create Account</span>
                     <i class="fas fa-spinner fa-spin btn-spinner" style="display: none;"></i>
                 </button>
                 
@@ -93,16 +111,14 @@
                 </div>
 
                 <div class="signup-link">
-                    Don't have an account? <a href="signup.html">Sign Up</a>
+                    Already have an account? <a href="login.html">Sign In</a>
                 </div>
             </form>
-            
-
             </div>
         </div>
     </div>
     
     <script src="../assets/js/api-service.js"></script>
-    <script src="../assets/js/login-script.js"></script>
+    <script src="../assets/js/signup-script.js"></script>
 </body>
 </html>

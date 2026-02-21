@@ -9,6 +9,8 @@
     <link rel="stylesheet" href="../assets/css/projects.css">
     <link rel="stylesheet" href="../assets/css/reports.css">
     <link rel="stylesheet" href="../assets/css/settings.css">
+    <link rel="stylesheet" href="../assets/css/pipeline.css">
+    <link rel="stylesheet" href="../assets/css/pipeline-horizontal.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
 <body>
@@ -97,6 +99,12 @@
                 <a href="#projects" data-section="projects">
                     <i class="fas fa-project-diagram"></i>
                     <span>Projects</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="#pipeline" data-section="pipeline">
+                    <i class="fas fa-stream"></i>
+                    <span>Pipeline</span>
                 </a>
             </li>
             <li class="menu-item">
@@ -509,6 +517,32 @@
                         <!-- Projects will be populated by JavaScript -->
                     </tbody>
                 </table>
+            </div>
+        </section>
+
+        <!-- Pipeline Section -->
+        <section id="pipeline" class="content-section">
+            <div class="pipeline-page">
+                <div class="pipeline-header-bar">
+                    <h1>Pipeline Management</h1>
+                    <div class="pipeline-actions">
+                        <div class="pipeline-stats">
+                            <div class="stat-item">
+                                <span class="stat-value" id="totalStages">0</span>
+                                <span class="stat-label">Stages</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-value" id="totalRecords">0</span>
+                                <span class="stat-label">Records</span>
+                            </div>
+                        </div>
+                        <button class="btn-secondary" onclick="clearPipelineData()" title="Clear all data">Clear Data</button>
+                        <button class="btn-add-stage" onclick="openStageModal()">+ Add Stage</button>
+                    </div>
+                </div>
+                <div class="stages-container" id="stagesContainer">
+                    <!-- Stages will be dynamically loaded here -->
+                </div>
             </div>
         </section>
 
@@ -1455,8 +1489,222 @@
         </div>
     </div>
 
+    <!-- Pipeline Modals -->
+    <div class="modal-overlay" id="stageModal">
+        <div class="modal-content stage-modal">
+            <div class="modal-header">
+                <h2 id="stageModalTitle">Add Stage</h2>
+                <button class="modal-close" onclick="closeStageModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="stageForm" onsubmit="saveStage(event)">
+                    <input type="hidden" id="stageId">
+                    <div class="form-group">
+                        <label for="stageName">Stage Name *</label>
+                        <input type="text" id="stageName" required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-secondary" onclick="closeStageModal()">Cancel</button>
+                <button type="submit" class="btn-primary" form="stageForm">Save Stage</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Record View Modal -->
+    <div class="modal-overlay" id="viewRecordModal">
+        <div class="modal-content" style="max-width: 700px;">
+            <div class="modal-header">
+                <h2><i class="fas fa-eye"></i> Record Details</h2>
+                <button class="modal-close" onclick="closeViewRecordModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="view-record-content">
+                    <div class="view-section">
+                        <h3><i class="fas fa-info-circle"></i> Project Information</h3>
+                        <div class="view-grid">
+                            <div class="view-item">
+                                <label>Project Name</label>
+                                <div id="viewProjectName" class="view-value">-</div>
+                            </div>
+                            <div class="view-item">
+                                <label>Priority</label>
+                                <div id="viewPriority" class="view-value">-</div>
+                            </div>
+                            <div class="view-item">
+                                <label>Budget</label>
+                                <div id="viewBudget" class="view-value">-</div>
+                            </div>
+                            <div class="view-item">
+                                <label>Current Stage</label>
+                                <div id="viewStage" class="view-value">-</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="view-section">
+                        <h3><i class="fas fa-user"></i> Customer Information</h3>
+                        <div class="view-grid">
+                            <div class="view-item">
+                                <label>Customer Name</label>
+                                <div id="viewCustomerName" class="view-value">-</div>
+                            </div>
+                            <div class="view-item">
+                                <label>Email</label>
+                                <div id="viewEmail" class="view-value">-</div>
+                            </div>
+                            <div class="view-item">
+                                <label>Phone</label>
+                                <div id="viewPhone" class="view-value">-</div>
+                            </div>
+                            <div class="view-item full-width">
+                                <label>Address</label>
+                                <div id="viewAddress" class="view-value">-</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="view-section">
+                        <h3><i class="fas fa-calendar"></i> Timeline</h3>
+                        <div class="view-grid">
+                            <div class="view-item">
+                                <label>Start Date</label>
+                                <div id="viewStartDate" class="view-value">-</div>
+                            </div>
+                            <div class="view-item">
+                                <label>Due Date</label>
+                                <div id="viewDueDate" class="view-value">-</div>
+                            </div>
+                            <div class="view-item">
+                                <label>Created</label>
+                                <div id="viewCreated" class="view-value">-</div>
+                            </div>
+                            <div class="view-item">
+                                <label>Last Updated</label>
+                                <div id="viewUpdated" class="view-value">-</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="view-section">
+                        <h3><i class="fas fa-align-left"></i> Description</h3>
+                        <div id="viewDescription" class="view-text">-</div>
+                    </div>
+                    
+                    <div class="view-section">
+                        <h3><i class="fas fa-sticky-note"></i> Notes</h3>
+                        <div id="viewNotes" class="view-text">-</div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-secondary" onclick="closeViewRecordModal()">
+                    <i class="fas fa-times"></i> Close
+                </button>
+                <button type="button" class="btn-primary" onclick="editFromView()">
+                    <i class="fas fa-edit"></i> Edit Record
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Record Modal -->
+    <div class="modal-overlay" id="recordModal">
+        <div class="modal-content" style="max-width: 700px;">
+            <div class="modal-header">
+                <h2 id="recordModalTitle"><i class="fas fa-folder-plus"></i> Add Record</h2>
+                <button class="modal-close" onclick="closeRecordModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="recordForm" onsubmit="saveRecord(event)">
+                    <input type="hidden" id="recordId">
+                    <input type="hidden" id="recordStageId">
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="recordProjectName"><i class="fas fa-project-diagram"></i> Project Name *</label>
+                            <input type="text" id="recordProjectName" placeholder="Enter project name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="recordCustomerName"><i class="fas fa-user"></i> Customer *</label>
+                            <input type="text" id="recordCustomerName" placeholder="Enter customer name" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="recordEmail"><i class="fas fa-envelope"></i> Email</label>
+                            <input type="email" id="recordEmail" placeholder="customer@email.com">
+                        </div>
+                        <div class="form-group">
+                            <label for="recordPhone"><i class="fas fa-phone"></i> Phone</label>
+                            <input type="tel" id="recordPhone" placeholder="+1 (555) 123-4567">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="recordPriority"><i class="fas fa-flag"></i> Priority</label>
+                            <select id="recordPriority">
+                                <option value="low">🟢 Low</option>
+                                <option value="medium" selected>🟡 Medium</option>
+                                <option value="high">🔴 High</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="recordBudget"><i class="fas fa-dollar-sign"></i> Budget</label>
+                            <input type="number" id="recordBudget" placeholder="0.00" step="0.01" min="0">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="recordStartDate"><i class="fas fa-calendar-alt"></i> Start Date</label>
+                            <input type="date" id="recordStartDate">
+                        </div>
+                        <div class="form-group">
+                            <label for="recordDueDate"><i class="fas fa-calendar-check"></i> Due Date</label>
+                            <input type="date" id="recordDueDate">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="recordAddress"><i class="fas fa-map-marker-alt"></i> Address</label>
+                        <input type="text" id="recordAddress" placeholder="Project location address">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="recordDescription"><i class="fas fa-align-left"></i> Description</label>
+                        <textarea id="recordDescription" rows="3" placeholder="Enter project details and requirements..."></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="recordNotes"><i class="fas fa-sticky-note"></i> Notes</label>
+                        <textarea id="recordNotes" rows="2" placeholder="Additional notes or comments..."></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-secondary" onclick="closeRecordModal()">
+                    <i class="fas fa-times"></i> Cancel
+                </button>
+                <button type="submit" class="btn-primary" form="recordForm">
+                    <i class="fas fa-save"></i> Save Record
+                </button>
+            </div>
+        </div>
+    </div>
+
     <script src="../assets/js/api-service.js"></script>
     <script src="../assets/js/login-script.js"></script>
+    <script src="../assets/js/pipeline-mongodb.js"></script>
     <script src="../assets/js/dashboard-script.js"></script>
 </body>
 </html>
